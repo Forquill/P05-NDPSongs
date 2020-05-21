@@ -111,4 +111,34 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
         return result;
     }
+
+    public ArrayList<Song> getAll5StarSong() {
+        //TODO return records in Java objects
+        ArrayList<Song> songs = new ArrayList<Song>();
+        String selectQuery = "SELECT " + COLUMN_ID + ","
+                + COLUMN_TITLE + ", "
+                + COLUMN_SINGERS + ", "
+                + COLUMN_YEAR + ", "
+                + COLUMN_STARS
+                + " FROM " + TABLE_NOTE + " WHERE " + COLUMN_STARS + " =5";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(0);
+                String title = cursor.getString(1);
+                String singers = cursor.getString(2);
+                int year = cursor.getInt(3);
+                int stars = cursor.getInt(4);
+                Song song = new Song(id,title, singers, year, stars);
+                songs.add(song);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return songs;
+    }
 }

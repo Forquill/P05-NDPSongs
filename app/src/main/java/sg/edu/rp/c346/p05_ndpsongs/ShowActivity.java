@@ -30,7 +30,7 @@ public class ShowActivity extends AppCompatActivity {
         lvShow = (ListView) findViewById(R.id.lvShow);
         btn5Star = (Button) findViewById(R.id.btnShowFive);
 
-        DBHelper db = new DBHelper(ShowActivity.this);
+        final DBHelper db = new DBHelper(ShowActivity.this);
         final ArrayList<Song> data = db.getAllSongs();
         db.close();
 
@@ -40,20 +40,19 @@ public class ShowActivity extends AppCompatActivity {
             song.add(data.get(i));
         }
 
-        ArrayAdapter aa = new SongsArrayAdapter(ShowActivity.this,R.layout.row,song);
+        final ArrayAdapter aa = new SongsArrayAdapter(ShowActivity.this,R.layout.row,song);
         lvShow.setAdapter(aa);
 
         btn5Star.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 song.clear();
+                ArrayList<Song> data = db.getAll5StarSong();
                 for (int i = 0; i < data.size(); i++){
-                    if (data.get(i).getStars() == 5){
-                        song.add(data.get(i));
-                        ArrayAdapter aa = new SongsArrayAdapter(ShowActivity.this,R.layout.row,song);
-                        lvShow.setAdapter(aa);
-                    }
+                    song.add(data.get(i));
                 }
+                aa.notifyDataSetChanged();
+
             }
         });
 
